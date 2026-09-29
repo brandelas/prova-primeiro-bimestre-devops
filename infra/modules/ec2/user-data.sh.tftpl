@@ -18,14 +18,4 @@ cd /opt/app/app
 
 docker build -t reservas-api .
 
-docker run -d \
-  --name reservas-api \
-  --restart unless-stopped \
-  -p 3000:3000 \
-  -e PORT=3000 \
-  -e DB_HOST="${db_host}" \
-  -e DB_PORT="${db_port}" \
-  -e DB_NAME="${db_name}" \
-  -e DB_USER="${db_username}" \
-  -e DB_PASSWORD="${db_password}" \
-  reservas-api
+docker run -d --name reservas-api --restart unless-stopped -p 3000:3000 -e PORT=3000 -e DB_HOST="${db_host}" -e DB_PORT="${db_port}" -e DB_NAME="${db_name}" -e DB_USER="${db_username}" -e DB_PASSWORD="${db_password}" reservas-api

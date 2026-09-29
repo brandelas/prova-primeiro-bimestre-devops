@@ -3,6 +3,12 @@ const pool = require("../db");
 
 const router = express.Router();
 
+const normalizeReservaPayload = (body = {}) => ({
+  cliente: typeof body.cliente === "string" ? body.cliente.trim() : body.cliente,
+  data: body.data,
+  status: typeof body.status === "string" ? body.status.trim() : body.status,
+});
+
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(
@@ -44,45 +50,23 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const {
-    nome_cliente,
-    data_reserva,
-    horario,
-    quantidade_pessoas,
-    observacoes,
-  } = req.body;
+  const { cliente, data, status } = normalizeReservaPayload(req.body);
 
-  if (!nome_cliente || !data_reserva || !horario || !quantidade_pessoas) {
+  if (!cliente || !data || !status) {
     return res.status(400).json({
       error: "Campos obrigatórios não informados",
-    });
-  }
-
-  if (quantidade_pessoas <= 0) {
-    return res.status(400).json({
-      error: "A quantidade de pessoas deve ser maior que zero",
     });
   }
 
   try {
     const result = await pool.query(
       `UPDATE reservas
-       SET nome_cliente = $1,
-           data_reserva = $2,
-           horario = $3,
-           quantidade_pessoas = $4,
-           observacoes = $5,
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = $6
+       SET cliente = $1,
+           data = $2,
+           status = $3
+       WHERE id = $4
        RETURNING *`,
-      [
-        nome_cliente,
-        data_reserva,
-        horario,
-        quantidade_pessoas,
-        observacoes || null,
-        id,
-      ]
+      [cliente, data, status, id]
     );
 
     if (result.rows.length === 0) {
@@ -125,39 +109,20 @@ router.delete("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const {
-    nome_cliente,
-    data_reserva,
-    horario,
-    quantidade_pessoas,
-    observacoes,
-  } = req.body;
+  const { cliente, data, status } = normalizeReservaPayload(req.body);
 
-  if (!nome_cliente || !data_reserva || !horario || !quantidade_pessoas) {
+  if (!cliente || !data || !status) {
     return res.status(400).json({
       error: "Campos obrigatórios não informados",
     });
   }
 
-  if (quantidade_pessoas <= 0) {
-    return res.status(400).json({
-      error: "A quantidade de pessoas deve ser maior que zero",
-    });
-  }
-
   try {
     const result = await pool.query(
-      `INSERT INTO reservas
-        (nome_cliente, data_reserva, horario, quantidade_pessoas, observacoes)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO reservas (cliente, data, status)
+       VALUES ($1, $2, $3)
        RETURNING *`,
-      [
-        nome_cliente,
-        data_reserva,
-        horario,
-        quantidade_pessoas,
-        observacoes || null,
-      ]
+      [cliente, data, status]
     );
 
     res.status(201).json(result.rows[0]);
