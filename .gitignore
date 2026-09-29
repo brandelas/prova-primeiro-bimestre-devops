@@ -26,4 +26,8 @@ crash.*.log
 .DS_Store
 Thumbs.db
 .vscode/
-.idea/
+.idea/infra/modules/*/.terraform.lock.hcl
+infra/modules/ec2/.terraform.lock.hcl
+infra/modules/rds/.terraform.lock.hcl
+infra/modules/security-group/.terraform.lock.hcl
+infra/modules/vpc/.terraform.lock.hcl
