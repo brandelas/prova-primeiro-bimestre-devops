@@ -1,0 +1,7 @@
+aws_region            = "us-east-1"
+ami_id                = "AMI_ID_DA_AWS"
+instance_profile_name = "NOME_DO_INSTANCE_PROFILE"
+
+db_name     = "reservas"
+db_username = "postgres"
+db_password = "SENHA_DO_BANCO"
