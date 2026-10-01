@@ -53,14 +53,32 @@ Ao final, o `terraform destroy` foi executado e confirmou a remoção de 14 recu
 
 ## 4. Validação, Responsabilidade e Uso da IA
 
-**Ferramentas utilizadas:** ChatGPT, Codex, Git, Docker, Terraform e AWS.
+Ferramentas utilizadas: ChatGPT, Codex, Git, Docker, Terraform e AWS.
 
 Antes de aplicar qualquer infraestrutura gerada ou alterada com auxílio de IA, a primeira preocupação foi verificar se os arquivos realmente atendiam aos requisitos da prova.
+
 A validação começou pelo código da API, conferindo as rotas, os campos obrigatórios, os códigos de resposta e a persistência no PostgreSQL.
-No ambiente local, o endpoint `/health` respondeu com `{"status":"ok"}` e HTTP 200.
+
+No ambiente local, o endpoint /health respondeu com {"status":"ok"} e HTTP 200.
+
 Também foi validado o CRUD de reservas, incluindo criação, consulta, consulta por ID, atualização, exclusão, erro 404 para ID inexistente e erro 400 para campos obrigatórios ausentes.
+
 No Docker Compose, foram verificados a API, o PostgreSQL, a rede, o volume e o healthcheck do banco.
-No Terraform, foram utilizadas validações como `terraform init -backend=false`, `terraform validate` e `terraform fmt -check -recursive`, além da revisão dos módulos e das regras de segurança.
+
+No Terraform, foram utilizadas validações como terraform init -backend=false, terraform validate e terraform fmt -check -recursive, além da revisão dos módulos e das regras de segurança.
+
 Na AWS, foram conferidos a comunicação entre EC2 e RDS, o Security Group, as subnets e o acesso privado ao banco.
+
 Durante o processo apareceram erros que mostraram a importância de não aceitar automaticamente uma resposta da IA, principalmente em comandos PowerShell, SSM e configurações da AWS.
-O fluxo utilizado foi, portanto, Git para versionamento, Docker para reproduzir o ambiente, T
+
+O fluxo utilizado foi, portanto, Git para versionamento, Docker para reproduzir o ambiente, Terraform para definir a infraestrutura e módulos para organizar os recursos, sempre realizando validações antes de considerar uma etapa concluída.
+
+A IA foi utilizada como ferramenta de apoio, mas as decisões finais e a execução dos comandos foram acompanhadas e verificadas durante o desenvolvimento.
+
+Quando uma sugestão apresentava erro ou não produzia o resultado esperado, ela era analisada, corrigida e testada novamente, em vez de ser aceita automaticamente.
+
+Essa experiência mostrou que o uso responsável da IA exige entender o que está sendo implementado, conferir os resultados e relacionar cada alteração aos requisitos da prova.
+
+Ao final, depois da coleta das evidências necessárias, a infraestrutura principal foi destruída com terraform destroy, evitando manter recursos da prova ativos na AWS Academy.
+
+Dessa forma, a IA funcionou como um copiloto durante o desenvolvimento, enquanto a validação técnica, a tomada de decisões e a responsabilidade pelo resultado permaneceram sob acompanhamento do aluno.
